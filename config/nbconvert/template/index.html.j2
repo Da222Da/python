@@ -126,7 +126,7 @@ a.anchor-link {
 {% else %}
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 {% endif %}
-<main>
+<main >
 {%- endblock body_header -%}
 
 {% block body_footer %}
@@ -136,7 +136,9 @@ a.anchor-link {
 // 自定义脚本
 var base_url = '{{ resources.get('output_files_dir') }}';
 var notebook_name = '{{ resources.get('metadata')['name'] }}';
-window.onload = function () {
+var body = document.querySelector("body");
+var main = document.querySelector("main");
+var handleLinks = function() { // 处理 a 标签的跳转
   var links = document.getElementsByTagName("a");
   for (var i = 0; i < links.length; i++) {
     links[i].addEventListener("click", function (event) {
@@ -145,7 +147,11 @@ window.onload = function () {
       var url = this.href;
 
       if (!url.endsWith(".ipynb")) {
-        window.open(url, "_blank"); // 在新窗口中打开链接
+        if(url.endsWith(".html")) {
+          window.open(url, "_self");
+        } else {
+          window.open(url, "_blank"); // 在新窗口中打开链接
+        }
       } else {
         var match = url.match(/\/(\w+)\.ipynb/g);
         match = match[0];
@@ -155,6 +161,52 @@ window.onload = function () {
       }
     });
   }
+}
+var handleStyle = function() { // 处理页面样式
+  // body 标签样式
+  body.style.height = "100vh";
+  body.style.padding = "0";
+  body.style.margin = "0";
+  body.style.backgroundColor = "#f5f6f7";
+
+  // main 标签样式
+  main.style.backgroundColor = "#fff";
+  if(body.offsetHeight > main.offsetHeight) {
+    main.style.height = "calc(100% - 60px)";
+  }
+  main.style.maxWidth = "920px";
+  main.style.margin = "0 auto";
+  main.style.paddingTop = "60px";
+}
+var handleNav = function() { // 处理导航 Nav
+  var nav = document.createElement('nav');
+  nav.style.width = "100%";
+  nav.style.position = "fixed";
+  nav.style.top = 0;
+  nav.style.left = 0;
+  nav.style.background = "#fff";
+  nav.style.boxShadow = "0 0 5px #888";
+  nav.style.zIndex = "999";
+  nav.innerHTML = `<div class="nav-wrapper">
+    <div class="logo">Python</div>
+    <ul class="list">
+      <li class="list-item">
+        <a href="./index.html">首页</a>
+      </li>
+      <li class="list-item" style="margin-left: 20px;">
+        <a href="https://github.com/Da222Da/python">Github</a>
+      </li>
+    </ul>
+  </div>` 
+
+  // 插入节点
+  const firstChild = body.firstChild;
+  body.insertBefore(nav, firstChild);
+}
+window.onload = function () {
+  handleStyle();
+  handleNav();
+  handleLinks();
 };
 </script>
 
