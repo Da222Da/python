@@ -8,6 +8,7 @@ result = subprocess.run(["python", script_dir])
 if result.returncode == 0:
     dist_dir = share.join(root_dir, "dist")
     commands = [
+        f'cd {dist_dir}',
         'git init',
         'git add --all',
         'git commit -m "deploy"',
