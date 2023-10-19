@@ -2,23 +2,38 @@ import share
 import subprocess
 
 root_dir = share.get_root_directory()
-script_dir = share.join(root_dir, "script/build.py")
-result = subprocess.run(["python", script_dir])
+dist_dir = share.join(root_dir, "dist")
 
-if result.returncode == 0:
-    dist_dir = share.join(root_dir, "dist")
+
+
+# 初始化
+def init():
+    return ""
+
+# 打包项目
+def build():
+    script_dir = share.join(root_dir, "script/build.py")
+    return subprocess.run(["python", script_dir])
+
+# 发布到 github
+def github():
     commands = [
-        f'cd {dist_dir}',
         'git init',
         'git add --all',
         'git commit -m "deploy"',
         'git remote add origin git@github.com:Da222Da/python.git',
         'git push -f git@github.com:Da222Da/python.git master:gh-pages',
-        f'rm -rf {dist_dir}'
-    ]
+    ]    
     for item in commands:
-        result = subprocess.run(item, shell=True, capture_output=True, text=True)
-        print(result)
+        result = subprocess.run(item, shell=True, capture_output=True, text=True, cwd=dist_dir)
         if result.returncode != 0:
-            print(result.stderr)
+            print(result.stdout or result.stderr)
             break
+
+# 主程序
+def main():
+    init()
+    build()
+    github()
+
+main()
