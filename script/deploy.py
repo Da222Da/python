@@ -20,5 +20,5 @@ if result.returncode == 0:
         result = subprocess.run(item, shell=True, capture_output=True, text=True)
         print(result)
         if result.returncode != 0:
-            print("Error")
+            print(f"Error：{result.stdout}")
             break
