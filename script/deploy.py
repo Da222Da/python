@@ -17,6 +17,7 @@ if result.returncode == 0:
     ]
     for item in commands:
         result = subprocess.run(item, shell=True, capture_output=True, text=True)
+        print(result)
         if result.returncode != 0:
             print("Error")
             break
