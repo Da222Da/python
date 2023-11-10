@@ -1,6 +1,6 @@
 import subprocess
 
-result = subprocess.run("jupyter notebook", shell=True, capture_output=True, text=True)
+result = subprocess.run("jupyter-lab", shell=True, capture_output=True, text=True)
 
 # 检查指令是否成功运行
 if result.returncode == 0:
